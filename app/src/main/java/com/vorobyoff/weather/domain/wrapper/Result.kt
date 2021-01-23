@@ -16,10 +16,10 @@ sealed class Result<out T> {
         class Value<T>(override val value: T) : Success<T>()
 
         data class HttpResponse<T>(
-                override val value: T,
-                override val statusCode: Int,
-                override val statusMessage: String? = null,
-                override val url: String? = null
+            override val value: T,
+            override val statusCode: Int,
+            override val statusMessage: String? = null,
+            override val url: String? = null
         ) : Success<T>(), IHttpResponse
 
         object Empty : Success<Nothing>() {
@@ -36,8 +36,8 @@ sealed class Result<out T> {
         class Error(override val error: Throwable) : Failure<Throwable>(error)
 
         class HttpError(override val error: HttpException) : Failure<HttpException>(), IHttpResponse {
-            override val statusCode: Int get() = error.statusCode
             override val statusMessage: String? get() = error.statusMessage
+            override val statusCode: Int get() = error.statusCode
             override val url: String? get() = error.url
         }
     }

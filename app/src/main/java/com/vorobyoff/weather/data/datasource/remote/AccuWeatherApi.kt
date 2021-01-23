@@ -1,4 +1,4 @@
-package com.vorobyoff.weather.data.datasource.network
+package com.vorobyoff.weather.data.datasource.remote
 
 import com.vorobyoff.weather.data.models.CityResponse
 import com.vorobyoff.weather.domain.wrapper.Result
@@ -10,5 +10,5 @@ interface AccuWeatherApi {
     suspend fun topCities(): Result<List<CityResponse>>
 
     @GET("/locations/v1/cities/autocomplete")
-    suspend fun searchCity(@Query("q") query: String): Result<List<CityResponse>>
+    suspend fun searchCity(@Query("q") query: String): List<CityResponse>
 }

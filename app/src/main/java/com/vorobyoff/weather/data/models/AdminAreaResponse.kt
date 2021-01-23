@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class CountryResponse(
+class AdminAreaResponse(
     @field:Json(name = "ID") val id: String,
     @field:Json(name = "LocalizedName") val name: String
 )

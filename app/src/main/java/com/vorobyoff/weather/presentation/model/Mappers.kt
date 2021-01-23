@@ -2,5 +2,11 @@ package com.vorobyoff.weather.presentation.model
 
 import com.vorobyoff.weather.domain.model.City
 
-fun City.toCityItem() =
-        CityItem(name = name, countyId = countyId, country = country, locationKey = locationKey)
+fun City.toCityItem() = CityItem(
+    locationKey = locationKey,
+    countyId = countyId,
+    country = country,
+    areaId = areaId,
+    area = area,
+    name = name
+)

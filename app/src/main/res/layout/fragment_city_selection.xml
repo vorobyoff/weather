@@ -14,7 +14,9 @@
         android:paddingVertical="14dp"
         android:text="@string/popular_cities_label"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-        android:textColor="?attr/colorOnPrimary" />
+        android:textColor="?attr/colorOnPrimary"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cities_rv"
@@ -23,7 +25,9 @@
         android:layout_below="@id/popular_cities_txt"
         android:layout_marginHorizontal="16dp"
         android:clipToPadding="false"
-        tools:listitem="@layout/item_city" />
+        android:visibility="gone"
+        tools:listitem="@layout/item_city"
+        tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/search_fab"
@@ -35,6 +39,16 @@
         android:layout_marginBottom="12dp"
         android:contentDescription="@string/search_city_desc"
         android:src="@drawable/ic_search"
+        android:visibility="gone"
         app:fabCustomSize="72dp"
-        app:maxImageSize="32dp" />
+        app:maxImageSize="32dp"
+        tools:visibility="visible" />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progress"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true" />
 </RelativeLayout>
