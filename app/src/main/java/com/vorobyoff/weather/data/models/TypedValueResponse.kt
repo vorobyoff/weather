@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class AdminAreaResponse(
-    @field:Json(name = "ID") val id: String,
-    @field:Json(name = "LocalizedName") val name: String
+class TypedValueResponse(
+    @field:Json(name = "Unit") val unit: String,
+    @field:Json(name = "Value") val value: Double?
 )

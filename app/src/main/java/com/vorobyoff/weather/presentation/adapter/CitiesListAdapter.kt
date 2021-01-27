@@ -39,7 +39,7 @@ class CitiesListAdapter(private val onItemClickListener: ((CityItem) -> Unit)? =
     ) : ViewHolder(binding.root) {
 
         fun bind(item: CityItem): Unit = with(binding) {
-            root.setOnClickListener { onItemClickListener?.invoke(item) }
+            root.setOnClickListener { onItemClickListener.invoke(item) }
             locationTxt.text = locationFormattedText(item)
             cityTxt.text = item.name
         }

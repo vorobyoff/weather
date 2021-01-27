@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/home_flow_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
+        tools:layout="@layout/fragment_weather" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_nav_view_back"
+        android:paddingVertical="4dp"
+        app:itemIconTint="@color/color_bottom_nav"
+        app:itemRippleColor="#4D526DFF"
+        app:itemTextAppearanceActive="@style/TextAppearance.MaterialComponents.Subtitle2"
+        app:itemTextAppearanceInactive="@style/TextAppearance.MaterialComponents.Subtitle2"
+        app:itemTextColor="@color/color_bottom_nav"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_home_navview" />
+</RelativeLayout>

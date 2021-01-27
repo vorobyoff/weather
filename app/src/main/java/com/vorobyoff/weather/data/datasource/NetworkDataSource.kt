@@ -1,14 +1,19 @@
 package com.vorobyoff.weather.data.datasource
 
 import com.vorobyoff.weather.data.datasource.remote.AccuWeatherApi
-import com.vorobyoff.weather.data.models.CityResponse
+import com.vorobyoff.weather.data.models.CurrentConditionResponse
+import com.vorobyoff.weather.data.models.GeopositionResponse
+import com.vorobyoff.weather.data.models.OneHourForecastResponse
 import com.vorobyoff.weather.domain.wrapper.Result
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class NetworkDataSource(private val api: AccuWeatherApi) {
 
-    suspend fun topCities(): Result<List<CityResponse>> = api.topCities()
+    suspend fun geopositionSearch(geoParam: String): Result<GeopositionResponse> =
+        api.geopositionSearch(geoParam)
 
-    suspend fun searchCity(query: String): Flow<List<CityResponse>> = flow { emit(api.searchCity(query)) }
+    suspend fun currentConditions(locationKey: String): Result<List<CurrentConditionResponse>> =
+        api.currentConditions(locationKey)
+
+    suspend fun twelveHoursForecast(locationKey: String): Result<List<OneHourForecastResponse>> =
+        api.twelveHoursForecasts(locationKey)
 }

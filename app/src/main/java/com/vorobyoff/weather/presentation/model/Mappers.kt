@@ -1,7 +1,5 @@
 package com.vorobyoff.weather.presentation.model
 
-import com.vorobyoff.weather.domain.model.City
-
 fun City.toCityItem() = CityItem(
     locationKey = locationKey,
     countyId = countyId,
@@ -9,4 +7,13 @@ fun City.toCityItem() = CityItem(
     areaId = areaId,
     area = area,
     name = name
+)
+
+fun Condition.toCurrentCondition() = CurrentCondition(
+    description = description,
+    metricTemp = metricTemp,
+    metricUnit = metricUnit,
+    isDayTime = isDayTime,
+    dateTime = dateTime,
+    icon = icon
 )

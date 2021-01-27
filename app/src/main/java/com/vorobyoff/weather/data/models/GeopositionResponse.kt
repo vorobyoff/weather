@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class CountryResponse(
-    @field:Json(name = "ID") val id: String,
-    @field:Json(name = "LocalizedName") val name: String
+class GeopositionResponse(
+    @field:Json(name = "Key") val locationKey: String,
+    @field:Json(name = "LocalizedName") val cityName: String
 )

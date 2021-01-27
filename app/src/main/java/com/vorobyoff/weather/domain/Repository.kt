@@ -1,12 +1,15 @@
 package com.vorobyoff.weather.domain
 
-import com.vorobyoff.weather.domain.model.City
+import com.vorobyoff.weather.domain.model.CurrentCondition
+import com.vorobyoff.weather.domain.model.Geoposition
+import com.vorobyoff.weather.domain.model.OneHourForecast
 import com.vorobyoff.weather.domain.wrapper.Result
-import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    suspend fun topCities(sortedBy: ((City) -> String)?): Result<List<City>>
+    suspend fun geopositionSearch(geoParam: String): Result<Geoposition>
 
-    suspend fun searchCity(query: String): Flow<List<City>>
+    suspend fun currentConditions(locationKey: String): Result<List<CurrentCondition>>
+
+    suspend fun twelveHoursForecast(locationKey: String): Result<List<OneHourForecast>>
 }
