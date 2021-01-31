@@ -9,25 +9,22 @@ import java.lang.reflect.Type
 
 class ResultAdapterFactory : CallAdapter.Factory() {
 
-    override fun get(returnType: Type, annotations: Array<Annotation>, retrofit: Retrofit): CallAdapter<*, *>? {
-        if (getRawType(returnType) == Call::class.java) {
-            if (returnType is ParameterizedType) {
-                val callInnerType: Type = getParameterUpperBound(0, returnType)
+    override fun get(
+        returnType: Type,
+        annotations: Array<Annotation>,
+        retrofit: Retrofit
+    ): CallAdapter<*, *>? = if (getRawType(returnType) == Call::class.java) {
+        if (returnType is ParameterizedType) {
+            val callInnerType: Type = getParameterUpperBound(0, returnType)
+            val isResultClass: Boolean = getRawType(callInnerType) == Result::class.java
 
-                if (getRawType(callInnerType) == Result::class.java) {
-                    if (callInnerType is ParameterizedType) {
-                        val resultInnerType: Type = getParameterUpperBound(0, callInnerType)
+            if (isResultClass && callInnerType is ParameterizedType) {
+                val resultInnerType: Type = getParameterUpperBound(0, callInnerType)
+                ResultCallAdapter<Any?>(resultInnerType)
+            } else ResultCallAdapter<Nothing>(Nothing::class.java)
 
-                        return ResultCallAdapter<Any?>(resultInnerType)
-                    }
-
-                    return ResultCallAdapter<Nothing>(Nothing::class.java)
-                }
-            }
-        }
-
-        return null
-    }
+        } else null
+    } else null
 
     private class ResultCallAdapter<R>(private val type: Type) : CallAdapter<R, Call<Result<R>>> {
         override fun adapt(call: Call<R>): Call<Result<R>> = ResultCall(call)

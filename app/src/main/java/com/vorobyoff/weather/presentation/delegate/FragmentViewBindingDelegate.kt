@@ -9,7 +9,7 @@ import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-class ViewBindingDelegate<T : ViewBinding>(
+class FragmentViewBindingDelegate<T : ViewBinding>(
     private val fragment: Fragment,
     private val bindingFactory: (View) -> T
 ) : ReadOnlyProperty<Fragment, T> {
@@ -31,7 +31,11 @@ class ViewBindingDelegate<T : ViewBinding>(
         val binding = binding
         if (binding != null) return binding
         val lifecycle = fragment.viewLifecycleOwner.lifecycle
-        if (!lifecycle.currentState.isAtLeast(State.INITIALIZED)) throw IllegalStateException("Should not initialize binding when fragment view are destroyed")
+
+        if (!lifecycle.currentState.isAtLeast(State.INITIALIZED)) {
+            throw IllegalStateException("Should not initialize binding when fragment view are destroyed")
+        }
+
         return bindingFactory.invoke(thisRef.requireView()).also { this.binding = it }
     }
 }

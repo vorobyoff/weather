@@ -33,18 +33,16 @@ fun View.addSystemWindowInsetToMargin(
     right: Boolean = false,
     bottom: Boolean = false
 ) {
-    val initialMargins = requestInitialMargins(this)
+    val initialMargins: Rect = requestInitialMargins(this)
 
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         view.updateLayoutParams {
-            (this as? ViewGroup.MarginLayoutParams)?.let {
-                updateMargins(
-                    top = initialMargins.top + if (top) insets.systemWindowInsetTop else 0,
-                    left = initialMargins.left + if (left) insets.systemWindowInsetLeft else 0,
-                    right = initialMargins.right + if (right) insets.systemWindowInsetRight else 0,
-                    bottom = initialMargins.bottom + if (bottom) insets.systemWindowInsetBottom else 0
-                )
-            }
+            (this as? ViewGroup.MarginLayoutParams)?.updateMargins(
+                top = initialMargins.top + if (top) insets.systemWindowInsetTop else 0,
+                left = initialMargins.left + if (left) insets.systemWindowInsetLeft else 0,
+                right = initialMargins.right + if (right) insets.systemWindowInsetRight else 0,
+                bottom = initialMargins.bottom + if (bottom) insets.systemWindowInsetBottom else 0
+            )
         }
         insets
     }
@@ -52,10 +50,10 @@ fun View.addSystemWindowInsetToMargin(
     requestInsetsWhenAttached()
 }
 
-private fun requestInitialPadding(view: View): Rect =
+private fun requestInitialPadding(view: View) =
     Rect(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom)
 
-private fun requestInitialMargins(view: View): Rect =
+private fun requestInitialMargins(view: View) =
     Rect(view.marginLeft, view.marginTop, view.marginRight, view.marginBottom)
 
 fun View.requestInsetsWhenAttached(): Unit = if (!isAttachedToWindow)

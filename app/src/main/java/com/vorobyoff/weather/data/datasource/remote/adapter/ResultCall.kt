@@ -33,7 +33,7 @@ class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, Result<T>>(proxy) {
                     statusCode = response.code(),
                     statusMessage = response.message(),
                     url = call.request().url.toString()
-                ) else onError(
+                ) else handleError(
                     code = response.code(),
                     message = response.message(),
                     url = call.request().url.toString()
@@ -45,16 +45,18 @@ class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, Result<T>>(proxy) {
         override fun onFailure(call: Call<T>, error: Throwable) {
             val result: Failure<out Throwable> =
                 if (error !is retrofit2.HttpException) Error(error)
-                else onError(error.code(), error.message(), error)
+                else handleError(code = error.code(), message = error.message(), cause = error)
 
             callback.onResponse(proxy, Response.success(result))
         }
 
-        private fun onError(
+        private fun handleError(
             code: Int,
+            url: String? = null,
             message: String? = null,
-            cause: Throwable? = null,
-            url: String? = null
-        ) = HttpError(HttpException(statusCode = code, statusMessage = message, cause = cause, url = url))
+            cause: Throwable? = null
+        ) = HttpError(
+            HttpException(statusCode = code, statusMessage = message, cause = cause, url = url)
+        )
     }
 }

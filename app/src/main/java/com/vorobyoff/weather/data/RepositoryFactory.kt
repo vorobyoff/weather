@@ -3,52 +3,70 @@ package com.vorobyoff.weather.data
 import com.vorobyoff.weather.data.datasource.NetworkDataSource
 import com.vorobyoff.weather.data.datasource.remote.NetworkFactory.weatherApi
 import com.vorobyoff.weather.data.models.CurrentConditionResponse
-import com.vorobyoff.weather.data.models.CurrentConditionResponse.TypedValuesResponse
 import com.vorobyoff.weather.data.models.CurrentConditionResponse.WindResponse
-import com.vorobyoff.weather.data.models.GeopositionResponse
-import com.vorobyoff.weather.data.models.TypedValueResponse
-import com.vorobyoff.weather.domain.Repository
-import com.vorobyoff.weather.domain.model.CurrentCondition
-import com.vorobyoff.weather.domain.model.CurrentCondition.TypedValues
-import com.vorobyoff.weather.domain.model.CurrentCondition.Wind
-import com.vorobyoff.weather.domain.model.Geoposition
-import com.vorobyoff.weather.domain.model.TypedValue
+import com.vorobyoff.weather.data.models.OneHourWeatherForecastResponse
+import com.vorobyoff.weather.data.models.TypedValuesResponse
+import com.vorobyoff.weather.data.models.TypedValuesResponse.TypedValueResponse
+import com.vorobyoff.weather.domain.models.*
+import com.vorobyoff.weather.domain.models.CurrentCondition.Wind
+import com.vorobyoff.weather.domain.models.OneDayWeatherForecast.Temperature
+import com.vorobyoff.weather.domain.models.TypedValues.TypedValue
 import kotlin.math.roundToInt
 
 object RepositoryFactory {
 
-//    fun create(): Repository = RepositoryImpl(
-//        dataSource = NetworkDataSource(weatherApi),
-//        mapGeopositionResponse = createGeopositionMapper(),
-//        mapTwelveHoursForecast =,
-//        mapCurrentConditionResponse = createCurrentConditionsMapper()
-//    )
+    val repository
+        get() = RepositoryImpl(
+            dataSource = NetworkDataSource(weatherApi),
+            mapTwelveHoursForecast = forecastsMapper(),
+            mapGeopositionResponse = geopositionMapper(),
+            mapDailyForecastsMapper = dailyForecastsMapper(),
+            mapCurrentConditionResponse = currentConditionsMapper()
+        )
 
-    private fun createGeopositionMapper(): (GeopositionResponse) -> Geoposition = {
-        Geoposition(locationKey = it.locationKey, cityName = it.locationKey)
+    private fun forecastsMapper(): HourlyForecastsMapper =
+        { response -> response.map { it.toDomain() } }
+
+    private fun geopositionMapper(): GeopositionMapper =
+        { Geoposition(locationKey = it.locationKey, cityName = it.locationKey) }
+
+    private fun dailyForecastsMapper(): DailyForecastsMapper = { response ->
+        response.forecasts.map {
+            OneDayWeatherForecast(
+                date = it.date,
+                description = "${it.day.description}\n${it.night.description}",
+                temperature = Temperature(
+                    minimum = it.temperature.minimum.toDomain(),
+                    maximum = it.temperature.maximum.toDomain()
+                )
+            )
+        }
     }
 
-    private fun createCurrentConditionsMapper(): (List<CurrentConditionResponse>) -> List<CurrentCondition> =
-        { responses -> responses.map { mapCurrentConditionResponse(it) } }
+    private fun currentConditionsMapper(): ConditionsMapper =
+        { responses -> responses.map { it.toDomain() } }
 
-    private fun mapCurrentConditionResponse(response: CurrentConditionResponse) = CurrentCondition(
-        uvIndex = response.uvIndex,
-        humidity = response.humidity,
-        iconCode = response.iconCode,
-        description = response.description,
-        wind = mapWindResponse(response.wind),
-        feelTemperature = mapTypedValuesResponse(response.feelTemperature),
-        actuallyTemperature = mapTypedValuesResponse(response.actuallyTemperature)
+    private fun OneHourWeatherForecastResponse.toDomain() = OneHourWeatherForecast(
+        temperature = temperature.toDomain(),
+        description = description,
+        date = date
     )
 
-    private fun mapWindResponse(response: WindResponse): Wind =
-        Wind(speed = mapTypedValuesResponse(response.speed))
-
-    private fun mapTypedValuesResponse(response: TypedValuesResponse) = TypedValues(
-        metric = mapTypedValueResponse(response.metric),
-        imperial = mapTypedValueResponse(response.imperial)
+    private fun CurrentConditionResponse.toDomain() = CurrentCondition(
+        uvIndex = uvIndex ?: 0,
+        humidity = humidity ?: 0,
+        iconCode = iconCode ?: 0,
+        description = description,
+        wind = wind.toDomain(),
+        feelTemperature = feelTemperature.toDomain(),
+        actuallyTemperature = actuallyTemperature.toDomain()
     )
 
-    private fun mapTypedValueResponse(response: TypedValueResponse) =
-        TypedValue(unit = response.unit, value = response.value?.roundToInt() ?: 0)
+    private fun WindResponse.toDomain() = Wind(speed.toDomain())
+
+    private fun TypedValuesResponse.toDomain() =
+        TypedValues(metric = metric.toDomain(), imperial = imperial.toDomain())
+
+    private fun TypedValueResponse.toDomain() =
+        TypedValue(unit = unit, value = value?.roundToInt() ?: 0)
 }

@@ -17,14 +17,13 @@ object NetworkFactory {
     private const val API_KEY = "TRDr3RAE8uvrdfUx8kj3bCojJJKd0PEM"
     private const val BASE_URL = "http://dataservice.accuweather.com"
 
-    val weatherApi: AccuWeatherApi by lazy {
-        Retrofit.Builder()
+    val weatherApi: AccuWeatherApi
+        get() = Retrofit.Builder()
             .addCallAdapterFactory(adapter())
             .addConverterFactory(converter())
             .baseUrl(BASE_URL)
             .client(client())
             .build().create()
-    }
 
     private fun adapter(): CallAdapter.Factory = ResultAdapterFactory()
 

@@ -23,5 +23,4 @@ fun <T, R> Result<T>.map(transform: (value: T) -> R): Result<R> = when (this) {
     is Result.Failure<*> -> this
 }
 
-fun <T, R> Result<T>.flatMap(transform: (result: Result<T>) -> Result<R>): Result<R> =
-    transform(this)
+fun <T, R> Result<T>.flatMap(transform: (result: Result<T>) -> Result<R>): Result<R> = transform(this)

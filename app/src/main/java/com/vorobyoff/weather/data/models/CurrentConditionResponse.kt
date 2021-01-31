@@ -13,13 +13,6 @@ class CurrentConditionResponse(
     @field:Json(name = "Temperature") val actuallyTemperature: TypedValuesResponse,
     @field:Json(name = "RealFeelTemperature") val feelTemperature: TypedValuesResponse
 ) {
-
     @JsonClass(generateAdapter = true)
     class WindResponse(@field:Json(name = "Speed") val speed: TypedValuesResponse)
-
-    @JsonClass(generateAdapter = true)
-    class TypedValuesResponse(
-        @field:Json(name = "Metric") val metric: TypedValueResponse,
-        @field:Json(name = "Imperial") val imperial: TypedValueResponse
-    )
 }
