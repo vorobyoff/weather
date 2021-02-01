@@ -15,19 +15,19 @@ import kotlinx.coroutines.coroutineScope
 typealias GetCommonWeatherInfoUseCase = suspend (String) -> CommonWeatherInfo
 
 fun commonWeatherInfo(repository: Repository, coordinate: String): GetCommonWeatherInfoUseCase = {
-    val geopositionUC: GetGeopositionUseCase = geopositionSearch(repository)
-    val geopositionResult: Result<Geoposition> = geopositionUC(coordinate)
-    if (geopositionResult.isSuccess()) onSuccess(
-        geoposition = geopositionResult.asSuccess(),
+    val geopositionUC: GetCityUseCase = geopositionSearch(repository)
+    val cityResult: Result<City> = geopositionUC(coordinate)
+    if (cityResult.isSuccess()) onSuccess(
+        city = cityResult.asSuccess(),
         repository = repository
-    ) else onFailure(geopositionResult.asFailure())
+    ) else onFailure(cityResult.asFailure())
 }
 
 private suspend fun onSuccess(
     repository: Repository,
-    geoposition: Success<Geoposition>
+    city: Success<City>
 ): CommonWeatherInfo = coroutineScope {
-    val locationKey: String = geoposition.value.locationKey
+    val locationKey: String = city.value.locationKey
 
     val hourlyForecastsDef: Deferred<Result<List<OneHourWeatherForecast>>> =
         async { twelveHoursForecastsResult(repository, locationKey) }
@@ -37,7 +37,7 @@ private suspend fun onSuccess(
         async { fiveDaysDailyForecastsResult(repository, locationKey) }
 
     CommonWeatherInfo(
-        geoposition = geoposition,
+        city = city,
         conditions = conditionsDef.await(),
         dailyForecasts = dailyForecastsDef.await(),
         twelveForecasts = hourlyForecastsDef.await()

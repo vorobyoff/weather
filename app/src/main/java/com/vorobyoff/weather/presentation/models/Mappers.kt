@@ -5,16 +5,15 @@ import com.vorobyoff.weather.domain.models.CurrentCondition.Wind
 import com.vorobyoff.weather.domain.models.TypedValues.TypedValue
 import com.vorobyoff.weather.domain.wrapper.map
 import com.vorobyoff.weather.presentation.models.CurrentConditionVO.WindVO
+import com.vorobyoff.weather.presentation.models.CityState.CityVO
 import com.vorobyoff.weather.presentation.models.TypedValuesVO.TypedValueVO
-import com.vorobyoff.weather.presentation.models.GeopositionState.GeopositionVO
 
 fun CommonWeatherInfo.mapToVO() = CommonWeatherVO(
-    geoposition = geoposition.map { it.mapToVO() },
     conditions = conditions.map { it.map { condition -> condition.mapToVO() } },
     twelveForecasts = twelveForecasts.map { it.map { forecast -> forecast.mapToVO() } }
 )
 
-fun Geoposition.mapToVO() = GeopositionVO(locationKey = locationKey, cityName = cityName)
+fun City.mapToVO() = CityVO(locationKey = locationKey, cityName = name)
 
 fun OneHourWeatherForecast.mapToVO() = OneHourForecastVO(
     temperature = temperature.mapToVO(),

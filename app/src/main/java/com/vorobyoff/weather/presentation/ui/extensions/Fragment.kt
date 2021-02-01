@@ -5,5 +5,5 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.vorobyoff.weather.presentation.delegate.FragmentViewBindingDelegate
 
-fun <T : ViewBinding> Fragment.viewBinding(factory: (View) -> T) =
+fun <T : ViewBinding> Fragment.viewBinding(factory: (View) -> T): FragmentViewBindingDelegate<T> =
     FragmentViewBindingDelegate(this, factory)

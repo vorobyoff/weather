@@ -14,6 +14,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 
 object NetworkFactory {
+    private const val QUERY_NAME = "apikey"
     private const val API_KEY = "TRDr3RAE8uvrdfUx8kj3bCojJJKd0PEM"
     private const val BASE_URL = "http://dataservice.accuweather.com"
 
@@ -39,7 +40,12 @@ object NetworkFactory {
 
     private fun requestInterceptor() = Interceptor { chain ->
         val old: Request = chain.request()
-        val url: HttpUrl = old.url.newBuilder().addQueryParameter("apikey", API_KEY).build()
-        chain.proceed(old.newBuilder().url(url).build())
+        val url: HttpUrl = old.url.newBuilder().addQueryParameter(QUERY_NAME, API_KEY).build()
+        val new: Request = old.newBuilder()
+            .addHeader(name = "Accept-Encoding", value = "gzip")
+            .url(url)
+            .build()
+
+        chain.proceed(new)
     }
 }

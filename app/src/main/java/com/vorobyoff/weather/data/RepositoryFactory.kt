@@ -18,8 +18,8 @@ object RepositoryFactory {
     val repository
         get() = RepositoryImpl(
             dataSource = NetworkDataSource(weatherApi),
+            mapCityResponse = cityMapper(),
             mapTwelveHoursForecast = forecastsMapper(),
-            mapGeopositionResponse = geopositionMapper(),
             mapDailyForecastsMapper = dailyForecastsMapper(),
             mapCurrentConditionResponse = currentConditionsMapper()
         )
@@ -27,8 +27,8 @@ object RepositoryFactory {
     private fun forecastsMapper(): HourlyForecastsMapper =
         { response -> response.map { it.toDomain() } }
 
-    private fun geopositionMapper(): GeopositionMapper =
-        { Geoposition(locationKey = it.locationKey, cityName = it.locationKey) }
+    private fun cityMapper(): CityMapper =
+        { City(locationKey = it.locationKey, name = it.cityName) }
 
     private fun dailyForecastsMapper(): DailyForecastsMapper = { response ->
         response.forecasts.map {

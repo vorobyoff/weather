@@ -2,7 +2,7 @@ package com.vorobyoff.weather.data.datasource.remote
 
 import com.vorobyoff.weather.data.models.CurrentConditionResponse
 import com.vorobyoff.weather.data.models.DailyWeatherForecastsResponse
-import com.vorobyoff.weather.data.models.GeopositionResponse
+import com.vorobyoff.weather.data.models.CityResponse
 import com.vorobyoff.weather.data.models.OneHourWeatherForecastResponse
 import com.vorobyoff.weather.domain.wrapper.Result
 import retrofit2.http.GET
@@ -12,7 +12,7 @@ import retrofit2.http.Query
 interface AccuWeatherApi {
 
     @GET("/locations/v1/cities/geoposition/search")
-    suspend fun geopositionSearch(@Query("q") geolocation: String): Result<GeopositionResponse>
+    suspend fun geopositionSearch(@Query("q") geolocation: String): Result<CityResponse>
 
     @GET("/currentconditions/v1/{locationKey}")
     suspend fun currentConditions(@Path("locationKey") locationKey: String): Result<List<CurrentConditionResponse>>
