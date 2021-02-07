@@ -1,18 +1,18 @@
 package com.vorobyoff.weather.domain
 
-import com.vorobyoff.weather.domain.models.CurrentCondition
 import com.vorobyoff.weather.domain.models.City
+import com.vorobyoff.weather.domain.models.CurrentCondition
 import com.vorobyoff.weather.domain.models.OneDayWeatherForecast
 import com.vorobyoff.weather.domain.models.OneHourWeatherForecast
 import com.vorobyoff.weather.domain.wrapper.Result
 
 interface Repository {
 
-    suspend fun geopositionSearch(geolocation: String): Result<City>
+    suspend fun getCityByGeolocation(geolocation: String): Result<City>
 
-    suspend fun currentConditions(locationKey: String): Result<List<CurrentCondition>>
+    suspend fun getCurrentConditions(locationKey: String): Result<List<CurrentCondition>>
 
-    suspend fun twelveHoursHourlyForecasts(locationKey: String): Result<List<OneHourWeatherForecast>>
+    suspend fun getFiveDaysForecasts(locationKey: String): Result<List<OneDayWeatherForecast>>
 
-    suspend fun fiveDaysDailyForecasts(locationKey: String): Result<List<OneDayWeatherForecast>>
+    suspend fun getTwelveHoursForecasts(locationKey: String): Result<List<OneHourWeatherForecast>>
 }

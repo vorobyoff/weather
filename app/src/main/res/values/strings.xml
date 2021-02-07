@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">Weather</string>
-    <string name="temperature_pattern">%1f°%1s</string>
-    <string name="search_city_desc">Search city</string>
-    <string name="city_location_pattern">%1s, %2s</string>
-    <string name="popular_cities_label">Popular cities</string>
+    <string name="places_label">Places</string>
+    <string name="weather_label">Weather</string>
+    <string name="pressure_label">Pressure</string>
+    <string name="uv_index_label">UV index</string>
+    <string name="humidity_label">Humidity</string>
+    <string name="wind_speed_label">Wind speed</string>
+    <string name="preferences_label">Preferences</string>
+    <string name="daily_summary_label">Daily Summary</string>
+    <string name="hourly_summary_label">Hourly Summary</string>
 </resources>

@@ -1,8 +1,8 @@
 package com.vorobyoff.weather.domain.wrapper
 
 class HttpException(
-    val statusMessage: String?,
     val statusCode: Int,
-    cause: Throwable?,
-    val url: String?
+    val statusMessage: String? = null,
+    val url: String? = null,
+    cause: Throwable? = null
 ) : Exception(null, cause)

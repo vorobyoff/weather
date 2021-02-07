@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 import com.vorobyoff.weather.data.models.TypedValuesResponse.TypedValueResponse
 
 @JsonClass(generateAdapter = true)
-class DailyWeatherForecastsResponse(@field:Json(name = "DailyForecasts") val forecasts: List<OneDayWeatherForecastResponse>) {
+class DailyWeatherForecastResponse(@field:Json(name = "DailyForecasts") val dailyForecasts: List<OneDayWeatherForecastResponse>) {
 
     @JsonClass(generateAdapter = true)
     class OneDayWeatherForecastResponse(

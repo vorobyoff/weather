@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+    tools:context=".presentation.ui.fragments.HostFragment">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/home_flow_container"
+        android:id="@+id/fragment_host_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_above="@+id/bottom_nav_container"
-        android:layout_alignParentTop="true"
+        android:layout_weight="90"
         tools:layout="@layout/fragment_weather" />
 
     <FrameLayout
         android:id="@+id/bottom_nav_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_alignParentBottom="true"
+        android:layout_weight="10"
         android:background="#FFF7F7F7">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -32,6 +36,6 @@
             app:itemTextAppearanceInactive="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:itemTextColor="@color/color_bottom_nav"
             app:labelVisibilityMode="labeled"
-            app:menu="@menu/menu_home_navview" />
+            app:menu="@menu/menu_host_nav_view" />
     </FrameLayout>
-</RelativeLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

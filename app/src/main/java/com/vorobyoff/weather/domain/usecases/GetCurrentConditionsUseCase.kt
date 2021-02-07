@@ -6,5 +6,5 @@ import com.vorobyoff.weather.domain.wrapper.Result
 
 typealias GetCurrentConditionsUseCase = suspend (locationKey: String) -> Result<List<CurrentCondition>>
 
-fun currentConditions(repository: Repository): GetCurrentConditionsUseCase =
-    { repository.currentConditions(it) }
+fun getCurrentConditionsUseCase(repository: Repository): GetCurrentConditionsUseCase =
+    { locationKey: String -> repository.getCurrentConditions(locationKey) }

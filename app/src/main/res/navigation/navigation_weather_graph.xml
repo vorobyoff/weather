@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_weather_graph"
+    app:startDestination="@id/item_weather">
+
+    <fragment
+        android:id="@+id/item_weather"
+        android:name="com.vorobyoff.weather.presentation.ui.fragments.WeatherFragment"
+        android:label="WeatherFragment"
+        tools:layout="@layout/fragment_weather">
+        <action
+            android:id="@+id/action_weather_fragment_to_citySelectionFragment"
+            app:destination="@id/city_selection_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/city_selection_fragment"
+        android:name="com.vorobyoff.weather.presentation.ui.fragments.CitySelectionFragment"
+        android:label="CitySelectionFragment"
+        tools:layout="@layout/fragment_city_selection">
+        <action
+            android:id="@+id/action_citySelectionFragment_to_weather_fragment"
+            app:destination="@id/item_weather" />
+    </fragment>
+</navigation>

@@ -5,7 +5,5 @@
     <color name="blue_500">#FF2196F3</color>
     <color name="teal_500">#FF009688</color>
     <color name="grey_900">#FF212121</color>
-    <color name="grey_600">#FF757575</color>
-    <color name="grey_400">#FFBDBDBD</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

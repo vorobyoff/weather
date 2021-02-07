@@ -1,8 +1,0 @@
-package com.vorobyoff.weather.presentation.models
-
-import com.vorobyoff.weather.domain.wrapper.Result
-
-class CommonWeatherVO(
-    val conditions: Result<List<CurrentConditionVO>>,
-    val twelveForecasts: Result<List<OneHourForecastVO>>
-)

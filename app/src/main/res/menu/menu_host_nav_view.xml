@@ -4,14 +4,14 @@
         android:id="@+id/item_weather"
         android:enabled="true"
         android:icon="@drawable/ic_weather"
-        android:title="Weather" />
+        android:title="@string/weather_label" />
     <item
         android:id="@+id/item_places"
         android:icon="@drawable/ic_location_pin"
-        android:title="Places" />
+        android:title="@string/places_label" />
 
     <item
         android:id="@+id/item_prefs"
         android:icon="@drawable/ic_preference"
-        android:title="Preferences" />
+        android:title="@string/preferences_label" />
 </menu>

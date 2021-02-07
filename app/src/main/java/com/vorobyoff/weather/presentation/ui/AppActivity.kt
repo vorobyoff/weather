@@ -1,66 +1,55 @@
 package com.vorobyoff.weather.presentation.ui
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.location.Location
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import com.google.android.gms.location.FusedLocationProviderClient
+import androidx.fragment.app.commit
+import androidx.fragment.app.commitNow
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
-import com.vorobyoff.weather.R
+import com.vorobyoff.weather.R.id.activity_host_container
 import com.vorobyoff.weather.R.layout.activity_app
-import com.vorobyoff.weather.presentation.ui.extensions.awaitLastLocation
 import com.vorobyoff.weather.presentation.ui.extensions.checkSelfPermissionCompat
-import com.vorobyoff.weather.presentation.ui.extensions.requestPermissionsCompat
-import com.vorobyoff.weather.presentation.ui.viewmodels.AppViewModel
-import com.vorobyoff.weather.presentation.ui.viewmodels.AppViewModelFactory
-import kotlinx.coroutines.Dispatchers.Default
+import com.vorobyoff.weather.presentation.ui.fragments.HostFragment
+import com.vorobyoff.weather.presentation.ui.viewmodels.SharedViewModelImp.Factory
+import com.vorobyoff.weather.presentation.ui.viewmodels.base.SharedViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.withContext
 
-class AppActivity : FragmentActivity() {
+class AppActivity : FragmentActivity(activity_app) {
     companion object {
-        const val PERMISSION_REQUEST_LOCATION = 0
+        private const val SAVED_STATE_KEY = "saved_state_key"
     }
 
-    private val appViewModel: AppViewModel by viewModels { AppViewModelFactory() }
-    private val locationClient: FusedLocationProviderClient
-        get() = getFusedLocationProviderClient(this)
-
-
-    @ExperimentalCoroutinesApi
-    override fun onCreate(savedInstansState: Bundle?) {
-        super.onCreate(savedInstansState)
-        setContentView(activity_app)
-        if (checkSelfPermissionCompat(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) sendLocation()
-        else requestPermissionsCompat(ACCESS_COARSE_LOCATION, code = PERMISSION_REQUEST_LOCATION)
+    private val sharedViewModel: SharedViewModel by viewModels {
+        Factory(getFusedLocationProviderClient(this))
     }
 
     @ExperimentalCoroutinesApi
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PERMISSION_REQUEST_LOCATION -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) sendLocation()
-                else TODO("Open fragment with cities list")
-            }
-            else -> TODO("Ignore this case")
+    @SuppressLint("missingPermission")
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
+        if (state == null) replace()
+        if (checkSelfPermissionCompat(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
+            sharedViewModel.findCityByGeolocation()
         }
     }
 
-    @ExperimentalCoroutinesApi
-    private fun sendLocation(): Job = lifecycleScope.launchWhenCreated {
-        val lastLocation: Location =
-            withContext(lifecycleScope.coroutineContext + Default) { locationClient.awaitLastLocation() }
-        appViewModel.getLocationKey(lat = lastLocation.latitude, lon = lastLocation.longitude)
+    private fun replace(): Unit = supportFragmentManager.commitNow {
+        val fragmentClass = HostFragment::class.java
+        replace(activity_host_container, fragmentClass, null, fragmentClass.canonicalName)
+        setReorderingAllowed(true)
+    }
+
+    override fun onRestoreInstanceState(state: Bundle) {
+        val savedFragment = supportFragmentManager.getFragment(state, SAVED_STATE_KEY)!!
+        supportFragmentManager.commit { attach(savedFragment) }
+    }
+
+    override fun onSaveInstanceState(state: Bundle) {
+        super.onSaveInstanceState(state)
+        val currentFragment = supportFragmentManager.findFragmentById(activity_host_container)!!
+        supportFragmentManager.putFragment(state, SAVED_STATE_KEY, currentFragment)
     }
 }

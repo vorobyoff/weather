@@ -13,14 +13,14 @@ class FragmentViewBindingDelegate<T : ViewBinding>(
     private val fragment: Fragment,
     private val bindingFactory: (View) -> T
 ) : ReadOnlyProperty<Fragment, T> {
-    private var binding: T? = null
+    private var _binding: T? = null
 
     init {
         fragment.lifecycle.addObserver(LifecycleEventObserver { owner, event ->
             if (event == Event.ON_CREATE) {
                 fragment.viewLifecycleOwnerLiveData.observe(owner) { lifecycleOwner ->
                     lifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-                        if (event == Event.ON_DESTROY) binding = null
+                        if (event == Event.ON_DESTROY) _binding = null
                     })
                 }
             }
@@ -28,7 +28,7 @@ class FragmentViewBindingDelegate<T : ViewBinding>(
     }
 
     override fun getValue(thisRef: Fragment, property: KProperty<*>): T {
-        val binding = binding
+        val binding = _binding
         if (binding != null) return binding
         val lifecycle = fragment.viewLifecycleOwner.lifecycle
 
@@ -36,6 +36,6 @@ class FragmentViewBindingDelegate<T : ViewBinding>(
             throw IllegalStateException("Should not initialize binding when fragment view are destroyed")
         }
 
-        return bindingFactory.invoke(thisRef.requireView()).also { this.binding = it }
+        return bindingFactory(thisRef.requireView()).also { this._binding = it }
     }
 }

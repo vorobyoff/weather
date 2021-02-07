@@ -12,8 +12,6 @@ import kotlin.coroutines.resumeWithException
 @SuppressLint("missingPermission")
 suspend fun FusedLocationProviderClient.awaitLastLocation(): Location =
     suspendCancellableCoroutine { continuation ->
-
         lastLocation.addOnSuccessListener { location -> continuation.resume(location) }
-
         lastLocation.addOnFailureListener { ex -> continuation.resumeWithException(ex) }
     }

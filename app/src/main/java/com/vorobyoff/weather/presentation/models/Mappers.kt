@@ -2,37 +2,48 @@ package com.vorobyoff.weather.presentation.models
 
 import com.vorobyoff.weather.domain.models.*
 import com.vorobyoff.weather.domain.models.CurrentCondition.Wind
+import com.vorobyoff.weather.domain.models.OneDayWeatherForecast.Temperature
 import com.vorobyoff.weather.domain.models.TypedValues.TypedValue
-import com.vorobyoff.weather.domain.wrapper.map
+import com.vorobyoff.weather.domain.models.WeatherWrapper.Mistake
+import com.vorobyoff.weather.domain.models.WeatherWrapper.Weather
 import com.vorobyoff.weather.presentation.models.CurrentConditionVO.WindVO
-import com.vorobyoff.weather.presentation.models.CityState.CityVO
+import com.vorobyoff.weather.presentation.models.OneDayWeatherForecastVO.TemperatureVO
 import com.vorobyoff.weather.presentation.models.TypedValuesVO.TypedValueVO
+import com.vorobyoff.weather.presentation.models.WeatherStates.SuccessfulWeather
+import com.vorobyoff.weather.presentation.models.WeatherStates.WrongWeather
 
-fun CommonWeatherInfo.mapToVO() = CommonWeatherVO(
-    conditions = conditions.map { it.map { condition -> condition.mapToVO() } },
-    twelveForecasts = twelveForecasts.map { it.map { forecast -> forecast.mapToVO() } }
+fun Weather.toVO() = SuccessfulWeather(
+    twelveForecasts = this.twelveHoursForecasts.map { it.toVO() },
+    dailyForecasts = this.fiveDaysForecasts.map { it.toVO() },
+    conditions = this.conditions.map { it.toVO() }
 )
 
-fun City.mapToVO() = CityVO(locationKey = locationKey, cityName = name)
+fun Mistake.toVO() = WrongWeather(cause = this.cause)
 
-fun OneHourWeatherForecast.mapToVO() = OneHourForecastVO(
-    temperature = temperature.mapToVO(),
-    description = description,
-    date = date
+fun CurrentCondition.toVO() = CurrentConditionVO(
+    uvIndex = this.uvIndex,
+    wind = this.wind.toVO(),
+    humidity = this.humidity,
+    iconCode = this.iconCode,
+    description = this.description,
+    feelTemperature = this.feelTemperature.toVO(),
+    actuallyTemperature = this.actuallyTemperature.toVO()
 )
 
-fun CurrentCondition.mapToVO() = CurrentConditionVO(
-    uvIndex = uvIndex,
-    humidity = humidity,
-    iconCode = iconCode,
-    wind = wind.mapToVO(),
-    description = description,
-    feelTemperature = feelTemperature.mapToVO(),
-    actuallyTemperature = actuallyTemperature.mapToVO()
+fun OneDayWeatherForecast.toVO() = OneDayWeatherForecastVO(
+    temperature = this.temperature.toVO(), description = this.description, date = this.date
 )
 
-fun Wind.mapToVO() = WindVO(speed = speed.mapToVO())
+fun OneHourWeatherForecast.toVO() = OneHourWeatherForecastVO(
+    temperature = this.temperature.toVO(), description = this.description, date = this.date
+)
 
-fun TypedValues.mapToVO() = TypedValuesVO(metric = metric.mapToVO(), imperial = imperial.mapToVO())
+fun Temperature.toVO() = TemperatureVO(minimum = this.minimum.toVO(), maximum = this.maximum.toVO())
 
-fun TypedValue.mapToVO() = TypedValueVO(unit = unit, value = value)
+fun City.toVO() = CityVO(locationKey = this.locationKey, cityName = this.cityName)
+
+fun Wind.toVO() = WindVO(speed = this.speed.toVO())
+
+fun TypedValues.toVO() = TypedValuesVO(metric = this.metric.toVO(), imperial = this.imperial.toVO())
+
+fun TypedValue.toVO() = TypedValueVO(unit = this.unit, value = this.value)

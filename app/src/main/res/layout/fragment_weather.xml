@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="presentation.ui.fragments.WeatherFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -88,9 +89,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/real_feel_txt"
                 android:layout_marginTop="20dp"
+                android:text="@string/humidity_label"
                 android:textColor="#FF263144"
-                android:textSize="16sp"
-                tools:text="Humidity" />
+                android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/humidity_params_txt"
@@ -108,9 +109,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/humidity_txt"
                 android:layout_marginTop="6dp"
+                android:text="@string/uv_index_label"
                 android:textColor="#FF263144"
-                android:textSize="16sp"
-                tools:text="UV index" />
+                android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/uv_params_txt"
@@ -128,9 +129,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/uv_index_txt"
                 android:layout_marginTop="6dp"
+                android:text="@string/wind_speed_label"
                 android:textColor="#FF263144"
-                android:textSize="16sp"
-                tools:text="Wind speed" />
+                android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/wind_speed_params_txt"
@@ -148,9 +149,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/wind_speed_txt"
                 android:layout_marginTop="6dp"
+                android:text="@string/pressure_label"
                 android:textColor="#FF263144"
-                android:textSize="16sp"
-                tools:text="Pressure" />
+                android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/pressure_params_txt"
@@ -171,11 +172,11 @@
             android:layout_marginStart="20dp"
             android:drawablePadding="6dp"
             android:letterSpacing="0.3"
+            android:text="@string/hourly_summary_label"
             android:textAllCaps="true"
             android:textColor="#FF263144"
             android:textSize="18sp"
-            app:drawableStartCompat="@drawable/ic_clock"
-            tools:text="Hourly Summary" />
+            app:drawableStartCompat="@drawable/ic_clock" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -195,11 +196,11 @@
             android:layout_marginStart="20dp"
             android:drawablePadding="6dp"
             android:letterSpacing="0.3"
+            android:text="@string/daily_summary_label"
             android:textAllCaps="true"
             android:textColor="#FF263144"
             android:textSize="18sp"
-            app:drawableStartCompat="@drawable/ic_calendar"
-            tools:text="Daily Summary" />
+            app:drawableStartCompat="@drawable/ic_calendar" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
