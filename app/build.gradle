@@ -11,10 +11,10 @@ android {
     defaultConfig {
         applicationId "com.vorobyoff.weather"
         vectorDrawables.useSupportLibrary = true
-        minSdkVersion 23
         targetSdkVersion 30
-        versionCode 1
+        minSdkVersion 23
         versionName "1.0"
+        versionCode 1
     }
 
     buildFeatures { viewBinding true }
@@ -32,6 +32,8 @@ android {
     }
 
     kotlinOptions { jvmTarget = JavaVersion.VERSION_1_8.toString() }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile) { kotlinOptions.useIR = true }
 }
 
 dependencies {
@@ -46,10 +48,10 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
     implementation("com.google.android.gms:play-services-location:17.1.0")
 
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
     implementation("com.squareup.moshi:moshi:$moshi_version")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_version")
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofit_version")
     implementation("androidx.navigation:navigation-ui-ktx:$navigation_version")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigation_version")
