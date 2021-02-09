@@ -38,8 +38,8 @@ fun getWeatherUseCase(
         return@coroutineScope try {
             Weather(
                 conditions = results[0].asSuccess().value as List<CurrentCondition>,
-                fiveDaysForecasts = results[1].asSuccess().value as List<OneDayWeatherForecast>,
-                twelveHoursForecasts = results[2].asSuccess().value as List<OneHourWeatherForecast>
+                fiveDaysForecasts = results[2].asSuccess().value as List<OneDayWeatherForecast>,
+                twelveHoursForecasts = results[1].asSuccess().value as List<OneHourWeatherForecast>
             )
         } catch (castException: ClassCastException) {
             val cause: Throwable = when {

@@ -16,6 +16,7 @@ import com.vorobyoff.weather.R.id.action_weather_fragment_to_citySelectionFragme
 import com.vorobyoff.weather.R.layout.fragment_weather
 import com.vorobyoff.weather.databinding.FragmentWeatherBinding
 import com.vorobyoff.weather.databinding.FragmentWeatherBinding.bind
+import com.vorobyoff.weather.domain.wrapper.HttpException
 import com.vorobyoff.weather.presentation.models.WeatherStates.*
 import com.vorobyoff.weather.presentation.ui.extensions.checkSelfPermissionCompat
 import com.vorobyoff.weather.presentation.ui.extensions.viewBinding
@@ -48,9 +49,10 @@ class WeatherFragment : Fragment(fragment_weather) {
         super.onCreate(instanceState)
 
         @SuppressLint("missingPermission")
-        if (requireActivity().checkSelfPermissionCompat(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
+        if (requireActivity().checkSelfPermissionCompat(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED)
             sharedViewModel.findCityByGeolocation()
-        } else registerPermissionLauncher.launch(ACCESS_COARSE_LOCATION)
+        else registerPermissionLauncher.launch(ACCESS_COARSE_LOCATION)
+
 
         observeSharedViewModelFlows()
         observeOwnViewModelFlows()
@@ -58,7 +60,10 @@ class WeatherFragment : Fragment(fragment_weather) {
 
     @ExperimentalCoroutinesApi
     private fun observeSharedViewModelFlows() = lifecycleScope.launchWhenCreated {
-        sharedViewModel.city.collect { weatherViewModel.requestWeather(it.locationKey) }
+        sharedViewModel.city.collect {
+            weatherViewModel.requestWeather(it.locationKey)
+            binding.cityNameTxt.text = it.cityName
+        }
     }
 
     private fun observeOwnViewModelFlows() = lifecycleScope.launchWhenCreated {
@@ -76,10 +81,15 @@ class WeatherFragment : Fragment(fragment_weather) {
     }
 
     private fun onWrongReceived(wrongWeather: WrongWeather) {
-        Log.d(TAG, "$wrongWeather.cause")
+        if (wrongWeather.cause is HttpException) {
+            Log.d(TAG, "${wrongWeather.cause.statusMessage}")
+            Log.d(TAG, "${wrongWeather.cause.statusCode}")
+            Log.d(TAG, "${wrongWeather.cause.url}")
+        } else Log.d(TAG, "${wrongWeather.cause}")
     }
 
-    private fun onSuccessfulReceived(weather: SuccessfulWeather) {
-        Log.d(TAG, "$weather")
+    private fun onSuccessfulReceived(weather: SuccessfulWeather): Unit = with(binding) {
+        currentTempTxt.text = "${weather.conditions[0].actuallyTemperature.metric.value}"
+        realFeelTxt.text = "${weather.conditions[0].feelTemperature.metric.value}"
     }
 }

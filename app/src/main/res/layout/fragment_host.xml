@@ -36,6 +36,6 @@
             app:itemTextAppearanceInactive="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:itemTextColor="@color/color_bottom_nav"
             app:labelVisibilityMode="labeled"
-            app:menu="@menu/menu_host_nav_view" />
+            app:menu="@menu/menu_bottom_nav_view" />
     </FrameLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

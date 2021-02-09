@@ -23,18 +23,19 @@ class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, Result<T>>(proxy) {
 
         @Suppress("unchecked_cast")
         override fun onResponse(call: Call<T>, response: Response<T>) {
-            val result: Result<T> = if (response.isSuccessful) Success.HttpResponse(
-                url = call.request().url.toString(),
-                statusMessage = response.message(),
-                value = response.body() as T,
-                statusCode = response.code()
-            ) else Failure.HttpError(
-                HttpException(
-                    statusCode = response.code(),
+            val result: Result<T> =
+                if (response.isSuccessful) Success.HttpResponse(
+                    url = call.request().url.toString(),
                     statusMessage = response.message(),
-                    url = call.request().url.toString()
+                    value = response.body() as T,
+                    statusCode = response.code()
+                ) else Failure.HttpError(
+                    HttpException(
+                        statusCode = response.code(),
+                        statusMessage = response.message(),
+                        url = call.request().url.toString()
+                    )
                 )
-            )
 
             callback.onResponse(proxy, Response.success(result))
         }

@@ -2,11 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation_weather_graph"
-    app:startDestination="@id/item_weather">
+    android:id="@+id/weather"
+    app:startDestination="@id/weather_fragment">
 
     <fragment
-        android:id="@+id/item_weather"
+        android:id="@+id/weather_fragment"
         android:name="com.vorobyoff.weather.presentation.ui.fragments.WeatherFragment"
         android:label="WeatherFragment"
         tools:layout="@layout/fragment_weather">
@@ -22,6 +22,6 @@
         tools:layout="@layout/fragment_city_selection">
         <action
             android:id="@+id/action_citySelectionFragment_to_weather_fragment"
-            app:destination="@id/item_weather" />
+            app:destination="@id/weather_fragment" />
     </fragment>
 </navigation>

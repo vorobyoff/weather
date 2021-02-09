@@ -14,10 +14,10 @@ interface AccuWeatherApi {
     @GET("/locations/v1/cities/geoposition/search")
     suspend fun findCityByGeolocation(@Query("q") geolocation: String): Result<CityResponse>
 
-    @GET("/currentconditions/v1/{locationKey}")
+    @GET("/currentconditions/v1/{locationKey}?details=true")
     suspend fun receiveCurrentConditions(@Path("locationKey") locationKey: String): Result<List<CurrentConditionResponse>>
 
-    @GET("/forecasts/v1/daily/5day/{locationKey}")
+    @GET("/forecasts/v1/daily/5day/{locationKey}?details=true")
     suspend fun receiveFiveDaysForecast(@Path("locationKey") locationKey: String): Result<DailyWeatherForecastResponse>
 
     @GET("/forecasts/v1/hourly/12hour/{locationKey}")

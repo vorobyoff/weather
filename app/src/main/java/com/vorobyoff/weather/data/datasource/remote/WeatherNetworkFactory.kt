@@ -18,27 +18,28 @@ object WeatherNetworkFactory {
     private const val API_KEY = "TRDr3RAE8uvrdfUx8kj3bCojJJKd0PEM"
     private const val BASE_URL = "http://dataservice.accuweather.com"
 
-    val weatherApi: AccuWeatherApi
-        get() = Retrofit.Builder()
-            .addCallAdapterFactory(adapter())
-            .addConverterFactory(converter())
+    val weatherApi: AccuWeatherApi by lazy {
+        Retrofit.Builder()
+            .addCallAdapterFactory(createAdapter())
+            .addConverterFactory(createConverter())
+            .client(createHttpClient())
             .baseUrl(BASE_URL)
-            .client(client())
             .build().create()
+    }
 
-    private fun adapter(): CallAdapter.Factory = ResultAdapterFactory()
+    private fun createAdapter(): CallAdapter.Factory = ResultAdapterFactory()
 
-    private fun converter(): Converter.Factory = MoshiConverterFactory.create()
+    private fun createConverter(): Converter.Factory = MoshiConverterFactory.create()
 
-    private fun client(): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor())
-        .addInterceptor(requestInterceptor())
+    private fun createHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(createLoggingInterceptor())
+        .addInterceptor(createRequestInterceptor())
         .retryOnConnectionFailure(true)
         .build()
 
-    private fun loggingInterceptor(): Interceptor = HttpLoggingInterceptor().setLevel(Level.BODY)
+    private fun createLoggingInterceptor(): Interceptor = HttpLoggingInterceptor().setLevel(Level.BODY)
 
-    private fun requestInterceptor() = Interceptor { chain ->
+    private fun createRequestInterceptor() = Interceptor { chain ->
         val old: Request = chain.request()
         val newUrl: HttpUrl = old.url.newBuilder().addQueryParameter(QUERY_NAME, API_KEY).build()
         val builder: Request.Builder = old.newBuilder()

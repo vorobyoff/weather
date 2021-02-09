@@ -9,7 +9,7 @@ class DailyWeatherForecastResponse(@field:Json(name = "DailyForecasts") val dail
 
     @JsonClass(generateAdapter = true)
     class OneDayWeatherForecastResponse(
-        @field:Json(name = "DateTime") val date: String,
+        @field:Json(name = "Date") val date: String,
         @field:Json(name = "Day") val day: DayResponse,
         @field:Json(name = "Night") val night: NightResponse,
         @field:Json(name = "Temperature") val temperature: TemperatureResponse

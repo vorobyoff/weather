@@ -9,15 +9,15 @@ import com.vorobyoff.weather.domain.wrapper.Result
 
 class WeatherNetworkDataSource(private val weatherApi: AccuWeatherApi) {
 
-    suspend fun receiveCityByGeolocation(geolocation: String): Result<CityResponse> =
+    suspend fun findCityByGeolocation(geolocation: String): Result<CityResponse> =
         weatherApi.findCityByGeolocation(geolocation)
 
-    suspend fun receiveCurrentConditions(locationKey: String): Result<List<CurrentConditionResponse>> =
+    suspend fun fetchCurrentConditions(locationKey: String): Result<List<CurrentConditionResponse>> =
         weatherApi.receiveCurrentConditions(locationKey)
 
-    suspend fun receiveFiveDaysForecast(locationKey: String): Result<DailyWeatherForecastResponse> =
+    suspend fun fetchFiveDaysForecast(locationKey: String): Result<DailyWeatherForecastResponse> =
         weatherApi.receiveFiveDaysForecast(locationKey)
 
-    suspend fun receiveTwelveHoursForecasts(locationKey: String): Result<List<OneHourWeatherForecastResponse>> =
+    suspend fun fetchTwelveHoursForecasts(locationKey: String): Result<List<OneHourWeatherForecastResponse>> =
         weatherApi.receiveTwelveHoursForecasts(locationKey)
 }
