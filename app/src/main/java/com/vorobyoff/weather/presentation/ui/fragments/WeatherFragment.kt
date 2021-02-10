@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.fragment.app.Fragment
@@ -16,15 +17,18 @@ import com.vorobyoff.weather.R.id.action_weather_fragment_to_citySelectionFragme
 import com.vorobyoff.weather.R.layout.fragment_weather
 import com.vorobyoff.weather.databinding.FragmentWeatherBinding
 import com.vorobyoff.weather.databinding.FragmentWeatherBinding.bind
-import com.vorobyoff.weather.domain.wrapper.HttpException
-import com.vorobyoff.weather.presentation.models.WeatherStates.*
+import com.vorobyoff.weather.presentation.models.CityVO
+import com.vorobyoff.weather.presentation.models.State
 import com.vorobyoff.weather.presentation.ui.extensions.checkSelfPermissionCompat
 import com.vorobyoff.weather.presentation.ui.extensions.viewBinding
 import com.vorobyoff.weather.presentation.ui.viewmodels.WeatherViewModelImp.Factory
 import com.vorobyoff.weather.presentation.ui.viewmodels.base.SharedViewModel
 import com.vorobyoff.weather.presentation.ui.viewmodels.base.WeatherViewModel
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.withContext
 
 class WeatherFragment : Fragment(fragment_weather) {
     companion object {
@@ -35,8 +39,6 @@ class WeatherFragment : Fragment(fragment_weather) {
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private val weatherViewModel: WeatherViewModel by viewModels { Factory() }
 
-    @ExperimentalCoroutinesApi
-    @Suppress("missingPermission")
     private val registerPermissionLauncher: ActivityResultLauncher<String> by lazy {
         registerForActivityResult(RequestPermission()) { isGranted ->
             if (isGranted) sharedViewModel.findCityByGeolocation()
@@ -53,43 +55,46 @@ class WeatherFragment : Fragment(fragment_weather) {
             sharedViewModel.findCityByGeolocation()
         else registerPermissionLauncher.launch(ACCESS_COARSE_LOCATION)
 
-
         observeSharedViewModelFlows()
-        observeOwnViewModelFlows()
     }
 
-    @ExperimentalCoroutinesApi
-    private fun observeSharedViewModelFlows() = lifecycleScope.launchWhenCreated {
-        sharedViewModel.city.collect {
-            weatherViewModel.requestWeather(it.locationKey)
-            binding.cityNameTxt.text = it.cityName
-        }
-    }
-
-    private fun observeOwnViewModelFlows() = lifecycleScope.launchWhenCreated {
-        weatherViewModel.weather.collect { weatherState ->
-            when (weatherState) {
-                is LoadingWeather -> onLoadingReceived()
-                is WrongWeather -> onWrongReceived(weatherState)
-                is SuccessfulWeather -> onSuccessfulReceived(weatherState)
+    private fun observeSharedViewModelFlows(): Job = lifecycleScope.launchWhenCreated {
+        sharedViewModel.city.collect { cityState: State<CityVO> ->
+            when (cityState) {
+                is State.Successed -> onSuccessReceived(cityState)
+                is State.Loading -> withContext(Main) { onLoadingReceived() }
+                is State.Errored<*> -> withContext(Main) { onErrorReceived(cityState.error) }
             }
         }
     }
 
-    private fun onLoadingReceived() {
-        Log.d(TAG, "LOADING")
+    private fun onLoadingReceived(): Int = Log.d(TAG, "CityState is loading")
+
+    private fun onErrorReceived(cause: Throwable): Int =
+        Log.d(TAG, "Something went wrong\ncause: ${cause}\nmessage: ${cause.message}")
+
+    private suspend fun onSuccessReceived(state: State.Successed<CityVO>) {
+        weatherViewModel.requestWeather(state.value.locationKey)
+        withContext(Main) { binding.cityNameTxt.text = state.value.cityName }
     }
 
-    private fun onWrongReceived(wrongWeather: WrongWeather) {
-        if (wrongWeather.cause is HttpException) {
-            Log.d(TAG, "${wrongWeather.cause.statusMessage}")
-            Log.d(TAG, "${wrongWeather.cause.statusCode}")
-            Log.d(TAG, "${wrongWeather.cause.url}")
-        } else Log.d(TAG, "${wrongWeather.cause}")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        observeOwnViewModelFlows()
     }
 
-    private fun onSuccessfulReceived(weather: SuccessfulWeather): Unit = with(binding) {
-        currentTempTxt.text = "${weather.conditions[0].actuallyTemperature.metric.value}"
-        realFeelTxt.text = "${weather.conditions[0].feelTemperature.metric.value}"
+    private fun observeOwnViewModelFlows(): Job = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        weatherViewModel.weather.collect { weatherState ->
+            when (weatherState) {
+                is State.Successed -> with(binding) {
+                    val condition = weatherState.value.conditions[0]
+                    currentTempTxt.text = "${condition.actuallyTemperature.metric.value}"
+                    realFeelTxt.text = "${condition.feelTemperature.metric.value}"
+                    humidityParamsTxt.text = "${condition.humidity}"
+                    uvParamsTxt.text = "${condition.uvIndex}"
+                }
+                is State.Loading -> withContext(Main) { onLoadingReceived() }
+                is State.Errored<*> -> withContext(Main) { onErrorReceived(weatherState.error) }
+            }
+        }
     }
 }

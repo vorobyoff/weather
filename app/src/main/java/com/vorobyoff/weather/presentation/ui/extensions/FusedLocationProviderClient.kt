@@ -1,15 +1,15 @@
 package com.vorobyoff.weather.presentation.ui.extensions
 
-import android.annotation.SuppressLint
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.location.Location
+import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.FusedLocationProviderClient
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-@ExperimentalCoroutinesApi
-@SuppressLint("missingPermission")
+@RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
 suspend fun FusedLocationProviderClient.awaitLastLocation(): Location =
     suspendCancellableCoroutine { continuation ->
         lastLocation.addOnSuccessListener { location -> continuation.resume(location) }

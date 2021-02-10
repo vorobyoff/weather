@@ -4,21 +4,15 @@ import com.vorobyoff.weather.domain.models.*
 import com.vorobyoff.weather.domain.models.CurrentCondition.Wind
 import com.vorobyoff.weather.domain.models.OneDayWeatherForecast.Temperature
 import com.vorobyoff.weather.domain.models.TypedValues.TypedValue
-import com.vorobyoff.weather.domain.models.WeatherWrapper.Mistake
-import com.vorobyoff.weather.domain.models.WeatherWrapper.Weather
 import com.vorobyoff.weather.presentation.models.CurrentConditionVO.WindVO
 import com.vorobyoff.weather.presentation.models.OneDayWeatherForecastVO.TemperatureVO
 import com.vorobyoff.weather.presentation.models.TypedValuesVO.TypedValueVO
-import com.vorobyoff.weather.presentation.models.WeatherStates.SuccessfulWeather
-import com.vorobyoff.weather.presentation.models.WeatherStates.WrongWeather
 
-fun Weather.toVO() = SuccessfulWeather(
-    twelveForecasts = this.twelveHoursForecasts.map { it.toVO() },
-    dailyForecasts = this.fiveDaysForecasts.map { it.toVO() },
-    conditions = this.conditions.map { it.toVO() }
+fun Weather.toVO() = WeatherVO(
+    conditions = this.conditions.map { it.toVO() },
+    fiveDaysForecasts = this.fiveDaysForecasts.map { it.toVO() },
+    twelveHoursForecasts = this.twelveHoursForecasts.map { it.toVO() }
 )
-
-fun Mistake.toVO() = WrongWeather(cause = this.cause)
 
 fun CurrentCondition.toVO() = CurrentConditionVO(
     uvIndex = this.uvIndex,

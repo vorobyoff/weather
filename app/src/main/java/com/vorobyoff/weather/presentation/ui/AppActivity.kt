@@ -1,14 +1,14 @@
 package com.vorobyoff.weather.presentation.ui
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.vorobyoff.weather.databinding.ActivityAppBinding
 import com.vorobyoff.weather.databinding.ActivityAppBinding.inflate
@@ -16,7 +16,6 @@ import com.vorobyoff.weather.presentation.ui.extensions.checkSelfPermissionCompa
 import com.vorobyoff.weather.presentation.ui.fragments.HostFragment
 import com.vorobyoff.weather.presentation.ui.viewmodels.SharedViewModelImp.Factory
 import com.vorobyoff.weather.presentation.ui.viewmodels.base.SharedViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class AppActivity : FragmentActivity() {
     companion object {
@@ -25,12 +24,10 @@ class AppActivity : FragmentActivity() {
 
     private val binding: ActivityAppBinding by lazy { inflate(layoutInflater) }
     private val containerId: Int get() = binding.activityHostContainer.id
-    private val sharedViewModel: SharedViewModel by viewModels {
-        Factory(getFusedLocationProviderClient(this))
+    private val sharedViewModel: SharedViewModel by lazy {
+        ViewModelProvider(this, Factory(getFusedLocationProviderClient(this))).get()
     }
 
-    @ExperimentalCoroutinesApi
-    @SuppressLint("missingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -38,7 +35,6 @@ class AppActivity : FragmentActivity() {
         if (savedInstanceState == null) replace()
         if (checkSelfPermissionCompat(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED)
             sharedViewModel.findCityByGeolocation()
-        sharedViewModel
     }
 
     private fun replace(): Unit = supportFragmentManager.commitNow {

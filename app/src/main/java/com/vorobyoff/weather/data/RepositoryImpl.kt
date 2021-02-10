@@ -29,12 +29,12 @@ class RepositoryImpl(
     override suspend fun getCityByGeolocation(geolocation: String): Result<City> =
         dataSource.findCityByGeolocation(geolocation).map(cityMapper)
 
-    override suspend fun getCurrentConditions(locationKey: String): Result<List<CurrentCondition>> =
-        dataSource.fetchCurrentConditions(locationKey).map(currentConditionsMapper)
+    override suspend fun getCurrentConditions(locationKey: String): List<CurrentCondition> =
+        currentConditionsMapper(dataSource.fetchCurrentConditions(locationKey))
 
-    override suspend fun getTwelveHoursForecasts(locationKey: String): Result<List<OneHourWeatherForecast>> =
-        dataSource.fetchTwelveHoursForecasts(locationKey).map(hourlyForecastsMapper)
+    override suspend fun getTwelveHoursForecasts(locationKey: String): List<OneHourWeatherForecast> =
+        hourlyForecastsMapper(dataSource.fetchTwelveHoursForecasts(locationKey))
 
-    override suspend fun getFiveDaysForecasts(locationKey: String): Result<List<OneDayWeatherForecast>> =
-        dataSource.fetchFiveDaysForecast(locationKey).map(dailyForecastMapper)
+    override suspend fun getFiveDaysForecasts(locationKey: String): List<OneDayWeatherForecast> =
+        dailyForecastMapper(dataSource.fetchFiveDaysForecast(locationKey))
 }
