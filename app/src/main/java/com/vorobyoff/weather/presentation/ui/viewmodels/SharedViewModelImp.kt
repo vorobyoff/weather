@@ -18,7 +18,7 @@ import com.vorobyoff.weather.domain.wrapper.isSuccess
 import com.vorobyoff.weather.presentation.models.CityVO
 import com.vorobyoff.weather.presentation.models.State
 import com.vorobyoff.weather.presentation.models.toVO
-import com.vorobyoff.weather.presentation.ui.exception.LocationDisabledException
+import com.vorobyoff.weather.presentation.exception.LocationDisabledException
 import com.vorobyoff.weather.presentation.ui.extensions.awaitLastLocation
 import com.vorobyoff.weather.presentation.ui.viewmodels.base.SharedViewModel
 import kotlinx.coroutines.Dispatchers.Default

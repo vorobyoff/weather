@@ -29,7 +29,7 @@ object Libs {
         const val material = "1.3.0"
         const val appcompat = "1.2.0"
         const val navigation = "2.3.3"
-        const val fragmentKtx = "1.3.0-rc02"
+        const val fragmentKtx = "1.3.0"
     }
 
     const val moshi = "com.squareup.moshi:moshi:${Versions.moshi}"
