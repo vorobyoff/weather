@@ -10,6 +10,7 @@ class CurrentConditionResponse(
     @field:Json(name = "WeatherIcon") val iconCode: Int?,
     @field:Json(name = "RelativeHumidity") val humidity: Int?,
     @field:Json(name = "WeatherText") val description: String,
+    @field:Json(name = "Pressure") val pressure: TypedValuesResponse,
     @field:Json(name = "Temperature") val actuallyTemperature: TypedValuesResponse,
     @field:Json(name = "RealFeelTemperature") val feelTemperature: TypedValuesResponse
 ) {

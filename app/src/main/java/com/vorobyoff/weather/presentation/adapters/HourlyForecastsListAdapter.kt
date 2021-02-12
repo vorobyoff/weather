@@ -22,10 +22,8 @@ class HourlyForecastsListAdapter : ListAdapter<OneHourWeatherForecastVO, HourlyF
         }
     }
 
-    private lateinit var binding: ItemHourlyWeatherBinding
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyForecastViewHolder {
-        binding = inflateBinding(inflaterFrom(parent.context), parent, false)
+        val binding = inflateBinding(inflaterFrom(parent.context), parent, false)
         return HourlyForecastViewHolder(binding)
     }
 
@@ -36,6 +34,7 @@ class HourlyForecastsListAdapter : ListAdapter<OneHourWeatherForecastVO, HourlyF
 
         fun bind(forecast: OneHourWeatherForecastVO): Unit = with(binding) {
             temperatureTxt.text = "${forecast.temperature.value}"
+            descriptionTxt.text = forecast.description
             timeTxt.text = forecast.date
         }
     }

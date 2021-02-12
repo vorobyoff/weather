@@ -2,11 +2,16 @@
     <string name="app_name">Weather</string>
     <string name="places_label">Places</string>
     <string name="weather_label">Weather</string>
+    <string name="humidity_pattern">%1$d%%</string>
     <string name="pressure_label">Pressure</string>
     <string name="uv_index_label">UV index</string>
     <string name="humidity_label">Humidity</string>
+    <string name="pressure_pattern">%1$d mb</string>
     <string name="wind_speed_label">Wind speed</string>
     <string name="preferences_label">Preferences</string>
+    <string name="current_temperature_pattern">%1$d°</string>
+    <string name="wind_speed_metric_pattern">%1$d mph</string>
     <string name="daily_summary_label">Daily Summary</string>
     <string name="hourly_summary_label">Hourly Summary</string>
+    <string name="real_feel_temperature_pattern">Real feel: %1$d°</string>
 </resources>

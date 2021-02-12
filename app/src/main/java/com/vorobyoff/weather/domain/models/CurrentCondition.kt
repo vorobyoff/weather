@@ -6,6 +6,7 @@ class CurrentCondition(
     val humidity: Int,
     val iconCode: Int,
     val description: String,
+    val pressure: TypedValues,
     val feelTemperature: TypedValues,
     val actuallyTemperature: TypedValues
 ) {

@@ -31,6 +31,7 @@ fun CurrentConditionResponse.toDomain() = CurrentCondition(
     humidity = this.humidity ?: 0,
     iconCode = this.iconCode ?: 0,
     description = this.description,
+    pressure = this.pressure.toDomain(),
     feelTemperature = this.feelTemperature.toDomain(),
     actuallyTemperature = this.actuallyTemperature.toDomain()
 )

@@ -22,10 +22,8 @@ class DailyForecastsListAdapter : ListAdapter<OneDayWeatherForecastVO, DayForeca
         }
     }
 
-    private lateinit var binding: ItemDailyWeatherBinding
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayForecastViewHolder {
-        binding = inflateBinding(inflaterFrom(parent.context), parent, false)
+        val binding: ItemDailyWeatherBinding = inflateBinding(inflaterFrom(parent.context), parent, false)
         return DayForecastViewHolder(binding)
     }
 
@@ -35,8 +33,8 @@ class DailyForecastsListAdapter : ListAdapter<OneDayWeatherForecastVO, DayForeca
     class DayForecastViewHolder(private val binding: ItemDailyWeatherBinding) : ViewHolder(binding.root) {
 
         fun bind(forecast: OneDayWeatherForecastVO): Unit = with(binding) {
-            nightTempTxt.text = "${forecast.temperature.minimum}"
-            dayTempTxt.text = "${forecast.temperature.maximum}"
+            nightTempTxt.text = "${forecast.temperature.minimum.value}"
+            dayTempTxt.text = "${forecast.temperature.maximum.value}"
             descriptionTxt.text = forecast.description
             dateTxt.text = forecast.date
         }

@@ -179,14 +179,15 @@
             app:drawableStartCompat="@drawable/ic_clock" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hourly_forecasts_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
+            android:orientation="horizontal"
             android:paddingHorizontal="20dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="12"
-            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_hourly_weather"
-            tools:orientation="horizontal" />
+            tools:listitem="@layout/item_hourly_weather" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/daily_summary_txt"
@@ -203,13 +204,14 @@
             app:drawableStartCompat="@drawable/ic_calendar" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/daily_forecasts_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
+            android:orientation="horizontal"
             android:paddingHorizontal="20dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="7"
-            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_daily_weather"
-            tools:orientation="horizontal" />
+            tools:listitem="@layout/item_daily_weather" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>

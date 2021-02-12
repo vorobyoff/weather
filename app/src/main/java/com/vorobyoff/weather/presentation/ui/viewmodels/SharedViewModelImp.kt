@@ -15,45 +15,50 @@ import com.vorobyoff.weather.domain.wrapper.Result
 import com.vorobyoff.weather.domain.wrapper.asFailure
 import com.vorobyoff.weather.domain.wrapper.asSuccess
 import com.vorobyoff.weather.domain.wrapper.isSuccess
+import com.vorobyoff.weather.presentation.exception.LocationDisabledException
 import com.vorobyoff.weather.presentation.models.CityVO
 import com.vorobyoff.weather.presentation.models.State
 import com.vorobyoff.weather.presentation.models.toVO
-import com.vorobyoff.weather.presentation.exception.LocationDisabledException
 import com.vorobyoff.weather.presentation.ui.extensions.awaitLastLocation
 import com.vorobyoff.weather.presentation.ui.viewmodels.base.SharedViewModel
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 import androidx.lifecycle.ViewModelProvider.Factory as VMFactory
 
+@Suppress("unused")
 class SharedViewModelImp(
     private val useCase: GetCityUseCase,
-    private val locationProvider: FusedLocationProviderClient,
+    private val locationProvider: FusedLocationProviderClient
 ) : SharedViewModel() {
     override val city = MutableSharedFlow<State<CityVO>>(replay = 1, extraBufferCapacity = 1)
 
     @RequiresPermission(anyOf = [ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION])
-    override fun findCityByGeolocation(): Job = viewModelScope.launch(IO) {
-        city.emit(State.Loading)
-        val location: Location = withContext(Default) { locationProvider.awaitLastLocation() }
-        val cityState: State<CityVO> = try {
-            val result: Result<City> = useCase(location.latitude, location.longitude)
-
-            if (result.isSuccess()) State.Successed(result.asSuccess().value.toVO())
-            else State.Errored(result.asFailure().error!!)
-        } catch (cause: Exception) {
-            when (cause) {
-                is NullPointerException -> State.Errored(cause as LocationDisabledException)
-                is CancellationException -> throw cause
-                else -> State.Errored(cause)
+    override fun findCityByGeolocation() {
+        viewModelScope.launch(Default) {
+            val cityState: State<CityVO> = try {
+                requestCityByGeoposition()
+            } catch (cause: Exception) {
+                returnStateFromException(cause)
             }
-        }
 
-        city.emit(cityState)
+            city.emit(cityState)
+        }
+    }
+
+    @RequiresPermission(anyOf = [ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION])
+    private suspend fun requestCityByGeoposition(): State<CityVO> {
+        val location: Location = locationProvider.awaitLastLocation()
+        val result: Result<City> = useCase(location.latitude, location.longitude)
+        return if (result.isSuccess()) State.Successed(result.asSuccess().value.toVO())
+        else State.Errored(result.asFailure().error!!)
+    }
+
+    private fun returnStateFromException(cause: Exception): State.Errored<Exception> = when (cause) {
+        is NullPointerException -> State.Errored(LocationDisabledException())
+        is CancellationException -> throw cause
+        else -> State.Errored(cause)
     }
 
     class Factory(private val locationProvider: FusedLocationProviderClient) : VMFactory {

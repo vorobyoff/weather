@@ -20,6 +20,7 @@ fun CurrentCondition.toVO() = CurrentConditionVO(
     humidity = this.humidity,
     iconCode = this.iconCode,
     description = this.description,
+    pressure = this.pressure.toVO(),
     feelTemperature = this.feelTemperature.toVO(),
     actuallyTemperature = this.actuallyTemperature.toVO()
 )

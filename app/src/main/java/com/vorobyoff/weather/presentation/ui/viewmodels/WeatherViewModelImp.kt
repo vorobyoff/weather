@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
+@Suppress("unused")
 class WeatherViewModelImp(private val useCase: GetWeatherUseCase) : WeatherViewModel() {
     override val weather: MutableStateFlow<State<WeatherVO>> = MutableStateFlow(State.Loading)
 

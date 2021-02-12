@@ -12,11 +12,11 @@ class WeatherNetworkDataSource(private val weatherApi: AccuWeatherApi) {
     suspend fun findCityByGeolocation(geolocation: String): Result<CityResponse> =
         weatherApi.findCityByGeolocation(geolocation)
 
-    suspend fun fetchCurrentConditions(locationKey: String): List<CurrentConditionResponse> =
-        weatherApi.receiveCurrentConditions(locationKey)
-
     suspend fun fetchFiveDaysForecast(locationKey: String): DailyWeatherForecastResponse =
         weatherApi.receiveFiveDaysForecast(locationKey)
+
+    suspend fun fetchCurrentConditions(locationKey: String): List<CurrentConditionResponse> =
+        weatherApi.receiveCurrentConditions(locationKey)
 
     suspend fun fetchTwelveHoursForecasts(locationKey: String): List<OneHourWeatherForecastResponse> =
         weatherApi.receiveTwelveHoursForecasts(locationKey)

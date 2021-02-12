@@ -6,6 +6,7 @@ data class CurrentConditionVO(
     val humidity: Int,
     val iconCode: Int,
     val description: String,
+    val pressure: TypedValuesVO,
     val feelTemperature: TypedValuesVO,
     val actuallyTemperature: TypedValuesVO
 ) {
