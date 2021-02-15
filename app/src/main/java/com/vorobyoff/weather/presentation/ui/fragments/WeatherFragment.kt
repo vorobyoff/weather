@@ -116,7 +116,8 @@ class WeatherFragment : Fragment(fragment_weather) {
     }
 
     private fun printConditionInfo(condition: CurrentConditionVO): Unit = with(binding) {
-        currentTempTxt.text = getString(current_temperature_pattern, condition.actuallyTemperature.metric.value)
+        currentTempTxt.text =
+            getString(current_temperature_pattern, condition.actuallyTemperature.metric.value)
         realFeelTxt.text = getString(real_feel_temperature_pattern, condition.feelTemperature.metric.value)
         windSpeedParamsTxt.text = getString(wind_speed_metric_pattern, condition.wind.speed.metric.value)
         pressureParamsTxt.text = getString(pressure_pattern, condition.pressure.metric.value)
